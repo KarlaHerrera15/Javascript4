@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Football Shop</h1>
+
+  <div class="container" id="items-container"></div>
+  <h2>Articoli Selezionati</h2>
+  <div id="selected-items"></div>
+  <p id="total-price">Prezzo Totale: 0</p>
+
+  <script>
+    // Magazzino con JSON
+    let magazzino = [
+      {
+        id: 1,
+        nome: "Maglietta Juventus",
+        disponibile: false,
+        img: "juve.jpg",
+        prezzo: "50"
+      },
+      {
+        id: 2,
+        nome: "Maglietta Inter",
+        disponibile: true,
+        img: "inter.jpeg",
+        prezzo: "45"
+      },
+      {
+        id: 3,
+        nome: "Maglietta Milan",
+        disponibile: true,
+        img: "milan.jpeg",
+        prezzo: "40"
+      },
+      {
+        id: 4,
+        nome: "Maglietta Liverpool",
+        disponibile: true,
+        img: "liver.jpg",
+        prezzo: "55"
+      },
+      {
+        id: 5,
+        nome: "Maglietta United",
+        disponibile: true,
+        img: "united.jpg",
+        prezzo: "48"
+      },
+      {
+        id: 6,
+        nome: "Maglietta Arsenal",
+        disponibile: false,
+        img: "arsenal.jpg",
+        prezzo: "42"
+      },
+      {
+        id: 7,
+        nome: "Maglietta Real Madrid",
+        disponibile: false,
+        img: "madrid.jpeg",
+        prezzo: "60"
+      },
+      {
+        id: 8,
+        nome: "Maglietta Barcellona",
+        disponibile: false,
+        img: "barca.jpg",
+        prezzo: "58"
+      },
+      {
+        id: 9,
+        nome: "Maglietta Atletico Madrid",
+        disponibile: true,
+        img: "atletico.jpg",
+        prezzo: "47"
+      }
+    ];
+
+    let carrello = [];
+    let totalPrice = "";
+
+    // Funzione per mostrare gli elementi in magazzino
+    function mostraElementi() {
+      let container = document.getElementById("items-container");
+      container.innerHTML = "";
+
+      magazzino.forEach(item => {
+        let itemDiv = document.createElement("div");
+        itemDiv.classList.add("item");
+
+        let img = document.createElement("img");
+        img.src = item.img;
+        itemDiv.appendChild(img);
+
+        let nome = document.createElement("p");
+        nome.textContent = item.nome;
+        itemDiv.appendChild(nome);
+
+        let prezzo = document.createElement("p");
+        prezzo.textContent = `Prezzo: ${item.prezzo}`;
+        itemDiv.appendChild(prezzo);
+
+        let disponibile = document.createElement("p");
+        disponibile.textContent = item.disponibile ? "Disponibile" : "Non disponibile";
+        itemDiv.appendChild(disponibile);
+
+        let button = document.createElement("button");
+        button.textContent = "Ordina";
+        button.addEventListener("click", () => effettuaOrdine(item));
+        itemDiv.appendChild(button);
+
+        container.appendChild(itemDiv);
+      });
+    }
+
+    // Funzione per gestire l'ordine
+    function effettuaOrdine(item) {
+      return new Promise((resolve, reject) => {
+        if (item.disponibile) {
+          setTimeout(() => {
+            carrello.push(item);
+            totalPrice += item.prezzo;
+            resolve(`Ordine effettuato per ${item.nome} a ${item.prezzo}`);
+          }, 1000);
+        } else {
+          reject(`La maglietta ${item.nome} non è disponibile al momento`);
+        }
+      })
+      .then(message => {
+        alert(message);
+        mostraArticoliSelezionati();
+      })
+      .catch(error => {
+        alert(error);
+      });
+    }
+
+    function mostraArticoliSelezionati() {
+  let selectedItemsDiv = document.getElementById("selected-items");
+  selectedItemsDiv.innerHTML = "";
+  let totalPrice = ""; // Inizializza il prezzo totale a zero
+
+  carrello.forEach(item => {
+    if (item.disponibile) {
+      let itemDiv = document.createElement("div");
+      itemDiv.classList.add("selected-item");
+
+      let nome = document.createElement("p");
+      nome.textContent = item.nome;
+      itemDiv.appendChild(nome);
+
+      let prezzo = document.createElement("p");
+      prezzo.textContent = `Prezzo: ${item.prezzo}`;
+      itemDiv.appendChild(prezzo);
+
+      selectedItemsDiv.appendChild(itemDiv);
+
+      totalPrice = totalPrice += item.prezzo; // Aggiorna il prezzo totale aggiungendo il prezzo di ogni articolo disponibile
+    }
+  });
+
+  let totalPriceParagraph = document.getElementById("total-price");
+  totalPriceParagraph.textContent = `Prezzo Totale: ${totalPrice} +`;
+}
+    // Mostra gli elementi in magazzino
+    mostraElementi();
+  </script>
+</body>
+</html>
+
